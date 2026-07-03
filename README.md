@@ -1,6 +1,9 @@
 # 🖼️ Image Optimizer Pro
 
-> Comprimi, rinomina e watermark migliaia di immagini direttamente nel browser.
+> Compress, rename and watermark thousands of images directly in your browser.
+> Zero servers. Zero uploads. A single HTML file.
+>
+> 🇮🇹 Comprimi, rinomina e applica watermark a migliaia di immagini direttamente nel browser.
 > Zero server. Zero upload. Un singolo file HTML.
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
@@ -8,88 +11,128 @@
 ![Single File](https://img.shields.io/badge/size-single%20HTML%20file-blue)
 ![Privacy First](https://img.shields.io/badge/privacy-100%25%20local-blueviolet)
 ![Works Offline](https://img.shields.io/badge/works-offline-orange)
+![PWA Ready](https://img.shields.io/badge/PWA-installable-success)
+![i18n](https://img.shields.io/badge/languages-IT%20%7C%20EN-informational)
 
 ---
 
-## 🤔 Perché esiste questo progetto
+## 🤔 Why this exists
 
-Avevo spesso bisogno di ridimensionare e comprimere immagini per vari progetti.
-Le opzioni disponibili mi stavano strette:
+I frequently needed to resize and compress images for various projects, but I always hated the available options:
 
-- I **programmi desktop** sono pesanti da installare e lenti da aggiornare
-- I **servizi online** (TinyPNG, iLoveIMG, etc.) ti chiedono di caricare i file su server di terze parti, hanno limiti di file per sessione, e alcuni sono a pagamento
-- **Squoosh** di Google è ottimo ma non gestisce il batch
+- **Desktop apps** are heavy to install and slow to update
+- **Online services** (TinyPNG, iLoveIMG, etc.) require uploading files to third-party servers, have per-session limits, and some are paid
+- **Squoosh** by Google is great but doesn't handle batch processing
 
-Così mi sono fatto il mio. Una volta fatta funzionare la compressione base, mi sono fatto prendere la mano e ho aggiunto feature che avrei voluto trovare già esistenti.
+So I built my own. Once I got the basic compression working, I got carried away and kept adding features I wished existed.
 
 ---
 
-## ✨ Funzionalità
+## ✨ Features
 
-### 🗜️ Compressione
-- Supporto a **PNG, JPEG, GIF, BMP, TIFF** in input
-- Output in **WebP, JPEG o PNG**
-- Slider per qualità (10–100%) e risoluzione massima (200–4000px lato lungo)
-- Processing in batch parallelo senza bloccare il browser
+### 🗜️ Compression
+- Input support for **PNG, JPEG, GIF, BMP, TIFF**
+- Output in **WebP, JPEG, PNG** or **AVIF** (with automatic browser detection)
+- Slider for quality (10–100%) and max resolution (200–4000px long side)
+- **Fixed dimensions with padding** — set exact width × height (e.g. 1000×1000 for marketplaces) with white/black/transparent/custom color padding
+- Parallel batch processing without blocking the browser
 
-### 📁 Upload & Cartelle
-- **Drag & drop** di file singoli, selezione multipla o **intere cartelle**
-- Ricorsione completa delle sottocartelle
-- Opzione per **preservare la struttura delle cartelle** nell'archivio ZIP finale
+### 📁 Upload & Folders
+- **Drag & drop** single files, multiple selection, or **entire folders**
+- Dedicated buttons: "📄 Select Files" and "📂 Select Folder"
+- Complete subfolder recursion
+- **Visual folder structure panel** showing detected folders and file count per folder
+- **Dedicated "Folder" column** in the table showing where each file lives
+- Option to **preserve folder structure** in the final ZIP archive
 
-### ✏️ Rinomina
-- **Pattern batch** con segnaposto:
-  - `{nome}` → nome file originale
-  - `{n}` → numero progressivo (con padding zero configurabile)
-  - `{data}` → data odierna (formato YYYY-MM-DD)
-  - `{cartella}` → nome della cartella di origine
-- **Rinomina inline**: clicca su qualsiasi nome nella tabella per modificarlo direttamente
-- Toggle **SEO-friendly**: minuscole, rimozione accenti, spazi → trattini
-- Anteprima live dei nomi finali prima di processare
+### ✏️ Rename
+- **Batch pattern** with placeholders:
+  - `{nome}` → original file name
+  - `{n}` → progressive number (with configurable zero-padding)
+  - `{data}` → today's date (YYYY-MM-DD format)
+  - `{cartella}` → source folder name
+- **Inline rename**: click any name in the table to edit it directly
+- **SEO-friendly** toggle: lowercase, accent removal, spaces → hyphens
+- Live preview of final names including folder paths before processing
 
 ### 💧 Watermark
-- Carica un tuo logo in **PNG o SVG**
-- Scegli **posizione** (5 opzioni: angoli + centro)
-- Controllo **opacità** e **dimensione** (% relativa all'immagine)
-- **Anteprima live** su canvas prima di applicare
+Two modes available via tab selector:
+
+**Image watermark:**
+- Upload your logo in **PNG or SVG**
+- Choose **position** (5 options: corners + center)
+- Control **opacity** and **size** (% relative to image)
+- **Live preview** on canvas
+
+**Text watermark:**
+- Custom text (e.g. `© My Brand`)
+- Choose **font** (Inter, Arial, Georgia, Courier New, Verdana)
+- Custom **color** picker
+- **Opacity**, **size** and **rotation** controls (0°, -30°, -45° diagonal)
+- **Position** selector (5 points)
+- **Live preview** on canvas
 
 ### ⚡ Presets
-| Preset | Risoluzione | Qualità | Formato |
-|--------|-------------|---------|---------|
+
+| Preset | Resolution | Quality | Format |
+|--------|-----------|---------|--------|
 | Thumbnail | 400px | 60% | WebP |
-| Catalogo | 1200px | 75% | WebP |
-| Alta Qualità | 1600px | 85% | WebP |
+| Catalog | 1200px | 75% | WebP |
+| High Quality | 1600px | 85% | WebP |
 | Social | 1080px | 80% | WebP |
 | Marketplace | 1500px | 78% | JPEG |
 
+**Custom presets:** Save your own presets with custom names — stored in `localStorage` and persisted across sessions. Delete them anytime with one click.
+
 ### 📊 Dashboard
-- Tabella live con anteprima, dimensione originale/ottimizzata, % risparmio per ogni file
-- **Selezione/deselezione** singola o globale: ottimizza solo i file che vuoi
-- Pulsante **retry** sulle singole righe in errore
-- Banner con **risparmio totale di banda** in MB/GB
-- **Stima del tempo rimanente** durante il processing
-- Anteprima **before/after** cliccando su ogni riga completata
+- Live table with thumbnail, original/optimized size, % savings per file
+- **Dedicated folder column** showing each file's source folder
+- **Select/deselect** individual files or all at once — optimize only what you need
+- **Retry button** on individual failed files
+- Banner with **total bandwidth savings** in MB/GB
+- **Estimated time remaining** during processing
+- **Before/after preview** by clicking any completed row
+
+### 🌙☀️ Light & Dark Mode
+- Toggle between dark and light themes
+- Preference saved in `localStorage` — remembered across sessions
+- Smooth CSS transition between themes
+- Watermark preview canvas adapts to current theme colors
+
+### 🌐 Multilingual (i18n)
+- Full **Italian** 🇮🇹 and **English** 🇬🇧 interface
+- Language switcher in the top-right corner
+- Preference saved in `localStorage`
+- All UI elements translated: controls, panels, table headers, status labels, toast notifications, placeholders
+
+### 📲 PWA (Progressive Web App)
+- **Installable** as a native app on desktop and mobile
+- Works **100% offline** after first load
+- Service Worker with cache-first strategy
+- "Install as App" button appears automatically on supported browsers
+- Opens without browser chrome (standalone mode)
 
 ### 📦 Export
-- Scarica tutto in un **archivio ZIP** con un click
-- Struttura cartelle originale opzionalmente preservata
-- Gestione automatica dei **nomi duplicati**
+- Download everything in a **ZIP archive** with one click
+- Original folder structure optionally preserved
+- Automatic **duplicate name handling**
+- SEO-friendly folder names in the ZIP when slugification is active
 
 ---
 
-## 🚀 Come si usa
+## 🚀 How to use
 
-Non c'è niente da installare.
+Nothing to install.
 
-**Opzione A — Online:**
-👉 [Apri la demo live]([https://tuousername.github.io/image-optimizer-pro](https://gdr-sys.github.io/Image-Optimizer-Pro/))
+**Option A — Online:**
+👉 [Open the live demo]((https://gdr-sys.github.io/Image-Optimizer-Pro/))
 
-**Opzione B — Offline:**
-1. Clona il repo o scarica `index.html`
-2. Aprilo in qualsiasi browser moderno
-3. Funziona. Fine.
+**Option B — Offline:**
+1. Clone the repo or download `index.html`
+2. Open it in any modern browser
+3. Done.
 
 ```bash
-git clone https://github.com/tuousername/image-optimizer-pro.git
+git clone https://github.com/yourusername/image-optimizer-pro.git
 cd image-optimizer-pro
-# apri index.html nel tuo browser
+# open index.html in your browser
