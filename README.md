@@ -160,7 +160,6 @@ Two modes available via tab selector:
 - "📲 Install as App" button appears automatically on supported browsers
 - Opens without browser chrome (standalone mode)
 
-![Screenshot: the "Install as App" button/prompt, and/or the app running installed in standalone window mode](./screenshots/16-pwa-install.png)
 
 ### 📦 Export
 - Download everything in a **ZIP archive (📦)** with one click
