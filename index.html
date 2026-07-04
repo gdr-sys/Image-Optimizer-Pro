@@ -285,12 +285,13 @@
     <section class="actions" id="actionBar">
         <button class="btn btn-p" id="btnOpt" onclick="startOptimization()">⚡ <span data-i18n="optimizeAll"></span></button>
         <button class="btn btn-s" id="btnDl" onclick="downloadZip()" disabled>📦 <span data-i18n="downloadZip"></span></button>
+        <button class="btn btn-s" id="btnSaveFolder" onclick="saveToFolder()" disabled>💾 <span data-i18n="saveFolder"></span></button>
         <button class="btn btn-o" onclick="openCropModal()">✂️ <span data-i18n="crop"></span></button>
         <button class="btn btn-o" id="btnUndo" onclick="undoLastOptimization()">↩️ <span data-i18n="undo"></span></button>
         <button class="btn btn-o" id="btnDupes" style="display:none" onclick="removeDuplicates()">🧹 <span data-i18n="removeDupes"></span></button>
         <button class="btn btn-o" style="border-color:var(--danger);color:var(--danger);" onclick="clearAll()">🗑️ <span data-i18n="clearAll"></span></button>
         <div class="spacer"></div>
-        <div class="fcb">📷 <strong id="fCnt">0</strong> <span id="selInfo"></span></div>
+        <div class="fcb">📷 <strong id="fCnt">0</strong> <span id="selInfo"></span><span id="engineBadge" style="margin-left:6px;opacity:0.65;font-weight:500"></span></div>
     </section>
     <div class="search-row" id="searchRow" style="display:none;margin-bottom:16px"><div class="search-box"><input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" oninput="onSearchInput()"><button class="search-clear" id="searchClearBtn" style="display:none" onclick="clearSearch()" data-i18n-title="searchClearTitle">✕</button></div></div>
     <!-- RENAME -->
@@ -312,6 +313,7 @@
             <div class="legend-item"><span class="li-ic">⇅</span> <span data-i18n="flipV"></span></div>
             <div class="legend-item"><span class="li-ic">✂️✕</span> <span data-i18n="legendCropTag"></span></div>
             <div class="legend-item"><span class="li-ic">⧉</span> <span data-i18n="legendDup"></span></div>
+            <div class="legend-item"><span class="li-ic">⚠️</span> <span data-i18n="legendFallback"></span></div>
             <div class="legend-item"><span class="li-ic">🔄</span> <span data-i18n="legendRetry"></span></div>
             <div class="legend-item"><span class="li-ic">👁️</span> <span data-i18n="legendPreview"></span></div>
         </div>
@@ -327,16 +329,16 @@
 <div class="toasts" id="toastC"></div>
 
 <script>
-const i18n={it:{subtitle:'Comprimi, rinomina e applica watermark a migliaia di immagini. Tutto nel browser, zero server.',installApp:'Installa come App',dark:'Dark',light:'Light',quality:'Qualità',maxRes:'Risoluzione max (lato lungo)',fixedSize:'Dimensioni fisse con padding',white:'Bianco',black:'Nero',transparent:'Trasparente',customColor:'Colore...',outputFormat:'Formato output',fmtWebp:'WebP — Eccellente compressione',fmtJpeg:'JPEG — Universale',fmtPng:'PNG — Lossless',fmtAvif:'AVIF — Massima compressione',dropTitle:'Trascina immagini o cartelle',dropSubtitle:'Le sottocartelle vengono mantenute',selectFiles:'Seleziona File',selectFolder:'Seleziona Cartella',folderStructure:'Struttura cartelle rilevata:',optimizeAll:'Ottimizza Tutto',downloadZip:'Scarica ZIP',clearAll:'Pulisci',files:'file',batchRename:'Rinomina Batch',inactive:'Disattivo',active:'Attivo',patternActive:'Pattern attivo',seoOnly:'Solo SEO',renamePattern:'Pattern rinomina',seoFriendly:'SEO-friendly',keepFolders:'Mantieni struttura cartelle',pattern:'Pattern',startNum:'Num. iniziale',padding:'Cifre',namePreview:'Anteprima nomi',applyWatermark:'Applica watermark',image:'Immagine',text:'Testo',wmLogo:'Logo',uploadPng:'📤 Carica PNG/SVG',position:'Posizione',opacity:'Opacità',sizePercent:'Dim. %',color:'Colore',rotation:'Rotazione',wmPreview:'Anteprima',totalOriginal:'Totale Originale',totalOptimized:'Totale Ottimizzato',bandwidthSaved:'Banda Risparmiata',totalSavings:'Risparmio Totale',details:'Dettaglio',file:'File',folder:'Cartella',original:'Originale',optimized:'Ottimizzato',savings:'Risparmio',status:'Stato',pending:'In attesa',processing:'In corso...',done:'Completato',error:'Errore',presetPlaceholder:'Nome preset...',savePreset:'Salva Preset',presetApplied:'Preset applicato',presetSaved:'Salvato!',presetDeleted:'Eliminato',noImages:'Nessuna immagine valida',imagesAdded:'immagini aggiunte',noFileSelected:'Nessun file selezionato',optimizing:'Ottimizzazione...',remaining:'rimanenti',processed:'immagini elaborate!',retried:'Riprocessato!',retryError:'Errore retry',zipDownloaded:'ZIP scaricato!',zipError:'Errore ZIP',allCleared:'Tutto rimosso',noFiles:'Nessun file',loadPreview:'Carica immagini.',dragHere:'Trascina immagini qui sopra.',clickToRename:'Click per rinominare',enterName:'Inserisci un nome',enablePattern:'Attiva prima il pattern',selected:'sel.',creatingZip:'ZIP...',andMore:'e altri',crop:'Crop',cropTool:'Crop Tool',free:'Libero',applyCrop:'Applica Crop',cancel:'Annulla',cropNote:'Il crop verrà applicato solo alle immagini selezionate; al termine tutte le immagini torneranno selezionate cosi potrai ottimizzarle tutte insieme.',cropApplied:'Crop applicato a',cropRemoved:'Crop rimosso',cropWillApplyTo:'Verrà applicato a',metadata:'Metadata (EXIF)',stripExif:'Rimuovi metadati EXIF',copyright:'Copyright / Autore',metadataNote:'Il redraw via Canvas rimuove automaticamente i metadati EXIF. Il copyright verrà aggiunto se specificato.',sessionFound:'Sessione precedente trovata',sessionRestore:'Ripristina',sessionDismiss:'Ignora',undo:'Annulla ultima ottimizzazione',undoDone:'Ottimizzazione annullata',removeDupes:'Rimuovi duplicati',dupesFound:'possibili duplicati trovati',dupesRemoved:'duplicati rimossi',searchPlaceholder:'Cerca per nome o cartella...',noResults:'Nessun risultato per la ricerca',rotateLeft:'Ruota a sinistra',rotateRight:'Ruota a destra',flipH:'Rifletti orizzontalmente',flipV:'Rifletti verticalmente',avifWarning:"AVIF risulta 'non supportato' nella maggior parte dei browser: la Canvas API di norma può leggere l'AVIF ma non lo sa ancora codificare, quindi il pulsante resta disattivato finché il tuo browser non aggiunge il supporto in scrittura.",legendBtn:'Legenda',legendCropTag:'Rimuovi il crop da questa immagine',legendDup:'Possibile duplicato (stesso nome e dimensione di un altro file)',legendRetry:'Riprova ottimizzazione (solo su errore)',legendPreview:'Confronta originale/ottimizzato (solo a ottimizzazione completata)',searchClearTitle:'Cancella ricerca',cropAnchorLabel:'Posizione crop su immagini diverse:',cropAnchorExact:'Stesso rettangolo (proporzionale)',cropAnchorC:'Centrato',cropAnchorT:'In alto, centrato',cropAnchorB:'In basso, centrato',cropAnchorL:'A sinistra, centrato',cropAnchorR:'A destra, centrato',cropAnchorTL:'In alto a sinistra',cropAnchorTR:'In alto a destra',cropAnchorBL:'In basso a sinistra',cropAnchorBR:'In basso a destra',cropAnchorNote:'Con più immagini selezionate, "Stesso rettangolo" applica la stessa posizione/proporzione vista in anteprima; le altre opzioni ricentrano invece il crop su ogni immagine mantenendo dimensioni e proporzioni, per evitare di tagliare soggetti diversi in punti sbagliati.'},en:{subtitle:'Compress, rename and watermark thousands of images. All in-browser, zero servers.',installApp:'Install as App',dark:'Dark',light:'Light',quality:'Quality',maxRes:'Max resolution (long side)',fixedSize:'Fixed size with padding',white:'White',black:'Black',transparent:'Transparent',customColor:'Color...',outputFormat:'Output format',fmtWebp:'WebP — Excellent compression',fmtJpeg:'JPEG — Universal',fmtPng:'PNG — Lossless',fmtAvif:'AVIF — Maximum compression',dropTitle:'Drag images or folders',dropSubtitle:'Subfolders are preserved',selectFiles:'Select Files',selectFolder:'Select Folder',folderStructure:'Folder structure detected:',optimizeAll:'Optimize All',downloadZip:'Download ZIP',clearAll:'Clear',files:'files',batchRename:'Batch Rename',inactive:'Inactive',active:'Active',patternActive:'Pattern active',seoOnly:'SEO only',renamePattern:'Rename pattern',seoFriendly:'SEO-friendly',keepFolders:'Keep folder structure',pattern:'Pattern',startNum:'Start number',padding:'Digits',namePreview:'Name preview',applyWatermark:'Apply watermark',image:'Image',text:'Text',wmLogo:'Logo',uploadPng:'📤 Upload PNG/SVG',position:'Position',opacity:'Opacity',sizePercent:'Size %',color:'Color',rotation:'Rotation',wmPreview:'Preview',totalOriginal:'Total Original',totalOptimized:'Total Optimized',bandwidthSaved:'Bandwidth Saved',totalSavings:'Total Savings',details:'Details',file:'File',folder:'Folder',original:'Original',optimized:'Optimized',savings:'Savings',status:'Status',pending:'Pending',processing:'Processing...',done:'Done',error:'Error',presetPlaceholder:'Preset name...',savePreset:'Save Preset',presetApplied:'Preset applied',presetSaved:'Saved!',presetDeleted:'Deleted',noImages:'No valid images',imagesAdded:'images added',noFileSelected:'No files selected',optimizing:'Optimizing...',remaining:'remaining',processed:'images processed!',retried:'Reprocessed!',retryError:'Retry error',zipDownloaded:'ZIP downloaded!',zipError:'ZIP error',allCleared:'All cleared',noFiles:'No files',loadPreview:'Load images.',dragHere:'Drag images above.',clickToRename:'Click to rename',enterName:'Enter a name',enablePattern:'Enable pattern first',selected:'sel.',creatingZip:'ZIP...',andMore:'and more',crop:'Crop',cropTool:'Crop Tool',free:'Free',applyCrop:'Apply Crop',cancel:'Cancel',cropNote:'Crop will be applied only to the selected images; afterwards all images will be re-selected so you can optimize them all together.',cropApplied:'Crop applied to',cropRemoved:'Crop removed',cropWillApplyTo:'Will apply to',metadata:'Metadata (EXIF)',stripExif:'Strip EXIF metadata',copyright:'Copyright / Author',metadataNote:'Canvas redraw automatically strips EXIF. Copyright will be added if specified.',sessionFound:'Previous session found',sessionRestore:'Restore',sessionDismiss:'Dismiss',undo:'Undo last optimization',undoDone:'Optimization undone',removeDupes:'Remove duplicates',dupesFound:'possible duplicates found',dupesRemoved:'duplicates removed',searchPlaceholder:'Search by name or folder...',noResults:'No results for this search',rotateLeft:'Rotate left',rotateRight:'Rotate right',flipH:'Flip horizontally',flipV:'Flip vertically',avifWarning:"AVIF shows as 'unsupported' in most browsers: the Canvas API can usually read AVIF but can't encode it yet, so the button stays disabled until your browser adds write support.",legendBtn:'Legend',legendCropTag:'Remove crop from this image',legendDup:'Possible duplicate (same name and size as another file)',legendRetry:'Retry optimization (only shown on error)',legendPreview:'Compare original/optimized (only after optimization)',searchClearTitle:'Clear search',cropAnchorLabel:'Crop position across different images:',cropAnchorExact:'Same rectangle (proportional)',cropAnchorC:'Centered',cropAnchorT:'Top, centered',cropAnchorB:'Bottom, centered',cropAnchorL:'Left, centered',cropAnchorR:'Right, centered',cropAnchorTL:'Top left',cropAnchorTR:'Top right',cropAnchorBL:'Bottom left',cropAnchorBR:'Bottom right',cropAnchorNote:'With multiple images selected, "Same rectangle" applies the exact position/ratio you set in the preview; the other options re-center the crop on each image instead, keeping the same size and aspect ratio, so different subjects aren\'t cut off in the wrong spot.'}};
+const i18n={it:{subtitle:'Comprimi, rinomina e applica watermark a migliaia di immagini. Tutto nel browser, zero server.',installApp:'Installa come App',dark:'Dark',light:'Light',quality:'Qualità',maxRes:'Risoluzione max (lato lungo)',fixedSize:'Dimensioni fisse con padding',white:'Bianco',black:'Nero',transparent:'Trasparente',customColor:'Colore...',outputFormat:'Formato output',fmtWebp:'WebP — Eccellente compressione',fmtJpeg:'JPEG — Universale',fmtPng:'PNG — Lossless',fmtAvif:'AVIF — Massima compressione',dropTitle:'Trascina immagini o cartelle',dropSubtitle:'Le sottocartelle vengono mantenute',selectFiles:'Seleziona File',selectFolder:'Seleziona Cartella',folderStructure:'Struttura cartelle rilevata:',optimizeAll:'Ottimizza Tutto',downloadZip:'Scarica ZIP',clearAll:'Pulisci',files:'file',batchRename:'Rinomina Batch',inactive:'Disattivo',active:'Attivo',patternActive:'Pattern attivo',seoOnly:'Solo SEO',renamePattern:'Pattern rinomina',seoFriendly:'SEO-friendly',keepFolders:'Mantieni struttura cartelle',pattern:'Pattern',startNum:'Num. iniziale',padding:'Cifre',namePreview:'Anteprima nomi',applyWatermark:'Applica watermark',image:'Immagine',text:'Testo',wmLogo:'Logo',uploadPng:'📤 Carica PNG/SVG',position:'Posizione',opacity:'Opacità',sizePercent:'Dim. %',color:'Colore',rotation:'Rotazione',wmPreview:'Anteprima',totalOriginal:'Totale Originale',totalOptimized:'Totale Ottimizzato',bandwidthSaved:'Banda Risparmiata',totalSavings:'Risparmio Totale',details:'Dettaglio',file:'File',folder:'Cartella',original:'Originale',optimized:'Ottimizzato',savings:'Risparmio',status:'Stato',pending:'In attesa',processing:'In corso...',done:'Completato',error:'Errore',presetPlaceholder:'Nome preset...',savePreset:'Salva Preset',presetApplied:'Preset applicato',presetSaved:'Salvato!',presetDeleted:'Eliminato',noImages:'Nessuna immagine valida',imagesAdded:'immagini aggiunte',noFileSelected:'Nessun file selezionato',optimizing:'Ottimizzazione...',remaining:'rimanenti',processed:'immagini elaborate!',retried:'Riprocessato!',retryError:'Errore retry',zipDownloaded:'ZIP scaricato!',zipError:'Errore ZIP',allCleared:'Tutto rimosso',noFiles:'Nessun file',loadPreview:'Carica immagini.',dragHere:'Trascina immagini qui sopra.',clickToRename:'Click per rinominare',enterName:'Inserisci un nome',enablePattern:'Attiva prima il pattern',selected:'sel.',creatingZip:'ZIP...',andMore:'e altri',crop:'Crop',cropTool:'Crop Tool',free:'Libero',applyCrop:'Applica Crop',cancel:'Annulla',cropNote:'Il crop verrà applicato solo alle immagini selezionate; al termine tutte le immagini torneranno selezionate cosi potrai ottimizzarle tutte insieme.',cropApplied:'Crop applicato a',cropRemoved:'Crop rimosso',cropWillApplyTo:'Verrà applicato a',metadata:'Metadata (EXIF)',stripExif:'Rimuovi metadati EXIF',copyright:'Copyright / Autore',metadataNote:'Il redraw via Canvas rimuove automaticamente i metadati EXIF. Il copyright verrà aggiunto se specificato.',sessionFound:'Sessione precedente trovata',sessionRestore:'Ripristina',sessionDismiss:'Ignora',undo:'Annulla ultima ottimizzazione',undoDone:'Ottimizzazione annullata',removeDupes:'Rimuovi duplicati',dupesFound:'possibili duplicati trovati',dupesRemoved:'duplicati rimossi',searchPlaceholder:'Cerca per nome o cartella...',noResults:'Nessun risultato per la ricerca',rotateLeft:'Ruota a sinistra',rotateRight:'Ruota a destra',flipH:'Rifletti orizzontalmente',flipV:'Rifletti verticalmente',avifWarning:"AVIF risulta 'non supportato' nella maggior parte dei browser: la Canvas API di norma può leggere l'AVIF ma non lo sa ancora codificare, quindi il pulsante resta disattivato finché il tuo browser non aggiunge il supporto in scrittura.",legendBtn:'Legenda',legendCropTag:'Rimuovi il crop da questa immagine',legendDup:'Possibile duplicato (stesso nome e dimensione di un altro file)',legendRetry:'Riprova ottimizzazione (solo su errore)',legendPreview:'Confronta originale/ottimizzato (solo a ottimizzazione completata)',searchClearTitle:'Cancella ricerca',cropAnchorLabel:'Posizione crop su immagini diverse:',cropAnchorExact:'Stesso rettangolo (proporzionale)',cropAnchorC:'Centrato',cropAnchorT:'In alto, centrato',cropAnchorB:'In basso, centrato',cropAnchorL:'A sinistra, centrato',cropAnchorR:'A destra, centrato',cropAnchorTL:'In alto a sinistra',cropAnchorTR:'In alto a destra',cropAnchorBL:'In basso a sinistra',cropAnchorBR:'In basso a destra',cropAnchorNote:'Con più immagini selezionate, "Stesso rettangolo" applica la stessa posizione/proporzione vista in anteprima; le altre opzioni ricentrano invece il crop su ogni immagine mantenendo dimensioni e proporzioni, per evitare di tagliare soggetti diversi in punti sbagliati.',saveFolder:'Salva in cartella',fsaUnsupported:'Il tuo browser non supporta il salvataggio diretto in cartella (funziona solo su Chrome/Edge): scarico invece uno ZIP.',fsaSaved:'File salvati nella cartella scelta!',fsaError:'Errore durante il salvataggio nella cartella',engineWorker:'⚙️ Web Worker ×',engineMain:'⚙️ Main thread (fallback)',legendFallback:'Il browser non supportava il formato scelto: usato un formato alternativo automaticamente'},en:{subtitle:'Compress, rename and watermark thousands of images. All in-browser, zero servers.',installApp:'Install as App',dark:'Dark',light:'Light',quality:'Quality',maxRes:'Max resolution (long side)',fixedSize:'Fixed size with padding',white:'White',black:'Black',transparent:'Transparent',customColor:'Color...',outputFormat:'Output format',fmtWebp:'WebP — Excellent compression',fmtJpeg:'JPEG — Universal',fmtPng:'PNG — Lossless',fmtAvif:'AVIF — Maximum compression',dropTitle:'Drag images or folders',dropSubtitle:'Subfolders are preserved',selectFiles:'Select Files',selectFolder:'Select Folder',folderStructure:'Folder structure detected:',optimizeAll:'Optimize All',downloadZip:'Download ZIP',clearAll:'Clear',files:'files',batchRename:'Batch Rename',inactive:'Inactive',active:'Active',patternActive:'Pattern active',seoOnly:'SEO only',renamePattern:'Rename pattern',seoFriendly:'SEO-friendly',keepFolders:'Keep folder structure',pattern:'Pattern',startNum:'Start number',padding:'Digits',namePreview:'Name preview',applyWatermark:'Apply watermark',image:'Image',text:'Text',wmLogo:'Logo',uploadPng:'📤 Upload PNG/SVG',position:'Position',opacity:'Opacity',sizePercent:'Size %',color:'Color',rotation:'Rotation',wmPreview:'Preview',totalOriginal:'Total Original',totalOptimized:'Total Optimized',bandwidthSaved:'Bandwidth Saved',totalSavings:'Total Savings',details:'Details',file:'File',folder:'Folder',original:'Original',optimized:'Optimized',savings:'Savings',status:'Status',pending:'Pending',processing:'Processing...',done:'Done',error:'Error',presetPlaceholder:'Preset name...',savePreset:'Save Preset',presetApplied:'Preset applied',presetSaved:'Saved!',presetDeleted:'Deleted',noImages:'No valid images',imagesAdded:'images added',noFileSelected:'No files selected',optimizing:'Optimizing...',remaining:'remaining',processed:'images processed!',retried:'Reprocessed!',retryError:'Retry error',zipDownloaded:'ZIP downloaded!',zipError:'ZIP error',allCleared:'All cleared',noFiles:'No files',loadPreview:'Load images.',dragHere:'Drag images above.',clickToRename:'Click to rename',enterName:'Enter a name',enablePattern:'Enable pattern first',selected:'sel.',creatingZip:'ZIP...',andMore:'and more',crop:'Crop',cropTool:'Crop Tool',free:'Free',applyCrop:'Apply Crop',cancel:'Cancel',cropNote:'Crop will be applied only to the selected images; afterwards all images will be re-selected so you can optimize them all together.',cropApplied:'Crop applied to',cropRemoved:'Crop removed',cropWillApplyTo:'Will apply to',metadata:'Metadata (EXIF)',stripExif:'Strip EXIF metadata',copyright:'Copyright / Author',metadataNote:'Canvas redraw automatically strips EXIF. Copyright will be added if specified.',sessionFound:'Previous session found',sessionRestore:'Restore',sessionDismiss:'Dismiss',undo:'Undo last optimization',undoDone:'Optimization undone',removeDupes:'Remove duplicates',dupesFound:'possible duplicates found',dupesRemoved:'duplicates removed',searchPlaceholder:'Search by name or folder...',noResults:'No results for this search',rotateLeft:'Rotate left',rotateRight:'Rotate right',flipH:'Flip horizontally',flipV:'Flip vertically',avifWarning:"AVIF shows as 'unsupported' in most browsers: the Canvas API can usually read AVIF but can't encode it yet, so the button stays disabled until your browser adds write support.",legendBtn:'Legend',legendCropTag:'Remove crop from this image',legendDup:'Possible duplicate (same name and size as another file)',legendRetry:'Retry optimization (only shown on error)',legendPreview:'Compare original/optimized (only after optimization)',searchClearTitle:'Clear search',cropAnchorLabel:'Crop position across different images:',cropAnchorExact:'Same rectangle (proportional)',cropAnchorC:'Centered',cropAnchorT:'Top, centered',cropAnchorB:'Bottom, centered',cropAnchorL:'Left, centered',cropAnchorR:'Right, centered',cropAnchorTL:'Top left',cropAnchorTR:'Top right',cropAnchorBL:'Bottom left',cropAnchorBR:'Bottom right',cropAnchorNote:'With multiple images selected, "Same rectangle" applies the exact position/ratio you set in the preview; the other options re-center the crop on each image instead, keeping the same size and aspect ratio, so different subjects aren\'t cut off in the wrong spot.',saveFolder:'Save to folder',fsaUnsupported:'Your browser doesn\'t support saving directly to a folder (Chrome/Edge only): downloading a ZIP instead.',fsaSaved:'Files saved to the chosen folder!',fsaError:'Error while saving to the folder',engineWorker:'⚙️ Web Worker ×',engineMain:'⚙️ Main thread (fallback)',legendFallback:'Your browser didn\'t support the chosen format: an alternative format was used automatically'}};
 let curLang='it';
 function setLang(l){curLang=l;localStorage.setItem('lang',l);document.getElementById('langIt').classList.toggle('active',l==='it');document.getElementById('langEn').classList.toggle('active',l==='en');applyI18n();updateUI();updRnPrev();onRnChange();}
 function t(k){return(i18n[curLang]&&i18n[curLang][k])||i18n.it[k]||k;}
-function applyI18n(){document.querySelectorAll('[data-i18n]').forEach(el=>{const v=t(el.getAttribute('data-i18n'));if(v)el.textContent=v;});document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const v=t(el.getAttribute('data-i18n-placeholder'));if(v)el.placeholder=v;});document.querySelectorAll('[data-i18n-title]').forEach(el=>{const v=t(el.getAttribute('data-i18n-title'));if(v)el.title=v;});document.getElementById('fmtDesc').textContent=t({webp:'fmtWebp',jpeg:'fmtJpeg',png:'fmtPng',avif:'fmtAvif'}[currentFormat]||'fmtWebp');}
+function applyI18n(){document.querySelectorAll('[data-i18n]').forEach(el=>{const v=t(el.getAttribute('data-i18n'));if(v)el.textContent=v;});document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const v=t(el.getAttribute('data-i18n-placeholder'));if(v)el.placeholder=v;});document.querySelectorAll('[data-i18n-title]').forEach(el=>{const v=t(el.getAttribute('data-i18n-title'));if(v)el.title=v;});document.getElementById('fmtDesc').textContent=t({webp:'fmtWebp',jpeg:'fmtJpeg',png:'fmtPng',avif:'fmtAvif'}[currentFormat]||'fmtWebp');const eb=document.getElementById('engineBadge');if(eb)eb.textContent=canUseWorkers?(t('engineWorker')+WORKER_COUNT):t('engineMain');}
 function toggleTheme(){const h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('theme',n);updThemeBtn();}
 function updThemeBtn(){const th=document.documentElement.getAttribute('data-theme');document.getElementById('themeBtn').innerHTML=th==='dark'?'🌙 '+t('dark'):'☀️ '+t('light');}
 function initTheme(){document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark');updThemeBtn();}
 
-let files=[],currentFormat='webp',isProcessing=false,hasOpt=false,wmImg=null,wmTab='image',deferredPrompt=null,avifSupported=false;
+let files=[],currentFormat='webp',isProcessing=false,hasOpt=false,wmImg=null,wmImgFile=null,wmTab='image',deferredPrompt=null,avifSupported=false;
 let dragSrcIdx=null;
 let sortField=null,sortAsc=true;
 let lastOptSnapshot=null;
@@ -377,7 +379,7 @@ document.getElementById('fileInputFolder').addEventListener('change',function(){
 async function readAllEntries(entries,bp){const r=[];for(const e of entries){if(e.isFile){const f=await gfe(e);if(f&&f.type.startsWith('image/'))r.push({file:f,path:bp});}else if(e.isDirectory){const sub=await rde(e.createReader());r.push(...await readAllEntries(sub,bp?bp+'/'+e.name:e.name));}}return r;}
 function rde(dr){return new Promise(r=>{const a=[];(function b(){dr.readEntries(e=>{if(!e.length)r(a);else{a.push(...e);b();}});})();});}
 function gfe(en){return new Promise(r=>en.file(r,()=>r(null)));}
-function addFiles(items){if(!items.length)return showToast(t('noImages'),'error');items.forEach(i=>i.path=(i.path||'').replace(/^\/+|\/+$/g,''));files.push(...items.map(i=>({file:i.file,path:i.path,originalSize:i.file.size,optimizedSize:null,optimizedBlob:null,status:'pending',thumbUrl:null,selected:true,customName:null,editing:false,cropData:null,rotation:0,flipH:false,flipV:false,isDuplicate:false})));hasOpt=false;document.getElementById('btnDl').disabled=true;document.getElementById('savBanner').classList.remove('vis');document.getElementById('searchRow').style.display=files.length>4?'flex':'none';updateFolderInfo();markDuplicates();updateUI();updRnPrev();showToast(`${items.length} ${t('imagesAdded')}`,'success');saveSession();}
+function addFiles(items){if(!items.length)return showToast(t('noImages'),'error');items.forEach(i=>i.path=(i.path||'').replace(/^\/+|\/+$/g,''));files.push(...items.map(i=>({file:i.file,path:i.path,originalSize:i.file.size,optimizedSize:null,optimizedBlob:null,status:'pending',thumbUrl:null,selected:true,customName:null,editing:false,cropData:null,rotation:0,flipH:false,flipV:false,isDuplicate:false,actualMime:null,formatFallback:false})));hasOpt=false;document.getElementById('btnDl').disabled=true;document.getElementById('savBanner').classList.remove('vis');document.getElementById('searchRow').style.display=files.length>4?'flex':'none';updateFolderInfo();markDuplicates();updateUI();updRnPrev();showToast(`${items.length} ${t('imagesAdded')}`,'success');saveSession();}
 function updateFolderInfo(){const fi=document.getElementById('folderInfo'),ft=document.getElementById('folderTree'),folders=new Map();files.forEach(f=>{const p=f.path||'';folders.set(p,(folders.get(p)||0)+1);});if(folders.size<=1&&folders.has('')){fi.classList.remove('vis');return;}fi.classList.add('vis');ft.innerHTML=[...folders.entries()].sort((a,b)=>a[0].localeCompare(b[0])).map(([p,c])=>`<div style="padding-left:${p?(p.split('/').length-1)*16:0}px"><span class="folder-icon">📂</span>${esc(p||'(root)')} <span class="file-count">(${c})</span></div>`).join('');}
 function toggleSec(id){document.getElementById(id).classList.toggle('open');}
 function onSearchInput(){document.getElementById('searchClearBtn').style.display=document.getElementById('searchInput').value?'block':'none';updateUI();}
@@ -395,7 +397,7 @@ function isSeoOn(){return document.getElementById('seoSlug').checked;}
 function keepFL(){return document.getElementById('keepFolders').checked;}
 function slugify(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').replace(/-{2,}/g,'-');}
 function slugifyFile(n){const p=n.split('.');const e=p.length>1?'.'+p.pop().toLowerCase():'';return slugify(p.join('.'))+e;}
-function buildName(item,idx){if(item.customName){let n=item.customName;if(!n.match(/\.\w+$/))n+=getExt();return isSeoOn()?slugifyFile(n):n;}const base=item.file.name.replace(/\.[^.]+$/,'');let res;if(isRnOn()){const pat=document.getElementById('rnPattern').value||'{nome}';const st=+document.getElementById('rnStart').value||1;const pd=Math.min(8,Math.max(1,+document.getElementById('rnPad').value||1));const dt=new Date().toISOString().slice(0,10);const fld=item.path?item.path.split('/').pop():'';res=pat.replace(/\{nome\}/g,base).replace(/\{n\}/g,String(st+idx).padStart(pd,'0')).replace(/\{data\}/g,dt).replace(/\{cartella\}/g,fld);}else res=base;res=isSeoOn()?slugify(res):res.replace(/[\\/:*?"<>|]/g,'').trim();return(res||'img-'+(idx+1))+getExt();}
+function buildName(item,idx){const ext=item.actualMime?extFromMime(item.actualMime):getExt();if(item.customName){let n=item.customName;if(!n.match(/\.\w+$/))n+=ext;return isSeoOn()?slugifyFile(n):n;}const base=item.file.name.replace(/\.[^.]+$/,'');let res;if(isRnOn()){const pat=document.getElementById('rnPattern').value||'{nome}';const st=+document.getElementById('rnStart').value||1;const pd=Math.min(8,Math.max(1,+document.getElementById('rnPad').value||1));const dt=new Date().toISOString().slice(0,10);const fld=item.path?item.path.split('/').pop():'';res=pat.replace(/\{nome\}/g,base).replace(/\{n\}/g,String(st+idx).padStart(pd,'0')).replace(/\{data\}/g,dt).replace(/\{cartella\}/g,fld);}else res=base;res=isSeoOn()?slugify(res):res.replace(/[\\/:*?"<>|]/g,'').trim();return(res||'img-'+(idx+1))+ext;}
 function getFullPath(item,idx){const name=buildName(item,idx);if(keepFL()&&item.path){return(isSeoOn()?item.path.split('/').map(slugify).join('/'):item.path)+'/'+name;}return name;}
 function onRnChange(){const on=isRnOn();['rnPattern','rnStart','rnPad'].forEach(id=>document.getElementById(id).disabled=!on);const b=document.getElementById('rnBdg');b.textContent=on?t('patternActive'):(isSeoOn()?t('seoOnly'):t('inactive'));b.classList.toggle('on',on||isSeoOn()||keepFL());updRnPrev();updateUI();}
 function insPH(ph){const i=document.getElementById('rnPattern');if(i.disabled)return showToast(t('enablePattern'),'info');const p=i.selectionStart??i.value.length;i.value=i.value.slice(0,p)+ph+i.value.slice(p);i.focus();onRnChange();}
@@ -403,7 +405,7 @@ function updRnPrev(){const c=document.getElementById('rnPrevRows');if(!files.len
 
 // WATERMARK
 function setWmTab(tab,btn){wmTab=tab;document.querySelectorAll('.wm-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.getElementById('wmImageConfig').style.display=tab==='image'?'block':'none';document.getElementById('wmTextConfig').style.display=tab==='text'?'block':'none';updWmPrev();}
-document.getElementById('wmImgInput').addEventListener('change',function(){const f=this.files[0];if(!f)return;const url=URL.createObjectURL(f);wmImg=new Image();wmImg.onload=()=>{document.getElementById('wmUpArea').classList.add('has');document.getElementById('wmUpContent').innerHTML=`<img class="wm-th" src="${url}">`;updWmPrev();};wmImg.src=url;});
+document.getElementById('wmImgInput').addEventListener('change',function(){const f=this.files[0];if(!f)return;wmImgFile=f;const url=URL.createObjectURL(f);wmImg=new Image();wmImg.onload=()=>{document.getElementById('wmUpArea').classList.add('has');document.getElementById('wmUpContent').innerHTML=`<img class="wm-th" src="${url}">`;updWmPrev();broadcastWatermark(wmImgFile);};wmImg.src=url;});
 function onWmChange(){const on=document.getElementById('wmEnabled').checked;const b=document.getElementById('wmBdg');b.textContent=on?t('active'):t('inactive');b.classList.toggle('on',on);updWmPrev();}
 function updWmPrev(){const box=document.getElementById('wmPrevBox');if(!document.getElementById('wmEnabled').checked||wmTab==='image'&&!wmImg){box.style.display='none';return;}box.style.display='block';const cv=document.getElementById('wmPrevCanvas'),ctx=cv.getContext('2d'),W=340,H=220;cv.width=W;cv.height=H;const cs=getComputedStyle(document.documentElement);ctx.fillStyle=cs.getPropertyValue('--checker1').trim();ctx.fillRect(0,0,W,H);const c2=cs.getPropertyValue('--checker2').trim();for(let y=0;y<H;y+=16)for(let x=0;x<W;x+=16)if((x/16+y/16)%2===0){ctx.fillStyle=c2;ctx.fillRect(x,y,16,16);}ctx.fillStyle=cs.getPropertyValue('--text-muted').trim();ctx.font='13px Inter';ctx.textAlign='center';ctx.fillText('📸',W/2,H/2);applyWm(ctx,W,H);}
 function applyWm(ctx,cW,cH){if(wmTab==='image')applyImgWm(ctx,cW,cH);else applyTextWm(ctx,cW,cH);}
@@ -491,100 +493,186 @@ const sp=it.optimizedSize!==null?Math.max(0,((it.originalSize-it.optimizedSize)/
 let nameCell;if(it.editing){const cn=it.customName||it.file.name.replace(/\.[^.]+$/,'');nameCell=`<input class="fname-input" id="in_${idx}" value="${esc(cn)}" onblur="finEdit(${idx})" onkeydown="if(event.key==='Enter')finEdit(${idx});if(event.key==='Escape'){files[${idx}].editing=false;updateUI();}">`;}else nameCell=`<div class="fname" onclick="startEdit(${idx})" title="${t('clickToRename')}">${esc(it.customName||it.file.name)}</div>`;
 const cropTag=it.cropData?`<button class="crop-tag" title="${t('legendCropTag')}" onclick="removeCrop(${idx},event)">✂️ ✕</button>`:'';
 const dupTag=it.isDuplicate?`<span class="dup-badge" title="${t('legendDup')}">⧉ dup?</span>`:'';
+const fbTag=it.formatFallback?`<span class="dup-badge" style="background:rgba(255,107,107,0.15);color:var(--danger)" title="${t('legendFallback')}">⚠️ ${extFromMime(it.actualMime).replace('.','').toUpperCase()}</span>`:'';
 const hasXform=it.rotation||it.flipH||it.flipV;
 const xformTag=hasXform?`<span class="xform-tag" title="${[it.rotation?it.rotation+'° '+t('rotateRight').toLowerCase():'',it.flipH?t('flipH'):'',it.flipV?t('flipV'):''].filter(Boolean).join(' · ')}">${it.rotation?it.rotation+'°':''}${it.flipH?' ⇋':''}${it.flipV?' ⇅':''}</span>`:'';
 const thumbStyle=`transform:rotate(${it.rotation}deg) scaleX(${it.flipH?-1:1}) scaleY(${it.flipV?-1:1});`;
-tr.innerHTML=`<td class="cbc"><input type="checkbox" ${it.selected?'checked':''} onchange="toggleSel(${idx})"></td><td class="drag-handle" title="Drag">≡</td><td><div class="fic"><img class="fthumb" style="${thumbStyle}" src="${it.thumbUrl}" loading="lazy"><div style="min-width:0">${dupTag}${cropTag}${xformTag}${nameCell}${nc?`<div class="fnew">→ ${esc(fn)}</div>`:''}</div></div></td><td><div class="fsub">${it.path?`<span class="folder-path">📂 ${esc(it.path)}</span>`:'—'}</div></td><td><span class="so">${fmtSize(it.originalSize)}</span></td><td><span class="sopt">${it.optimizedSize!==null?fmtSize(it.optimizedSize):'—'}</span></td><td>${sp!==null?`<span class="bdg ${sc}">-${sp}%</span>`:'—'}</td><td><div class="sc"><span class="dot ${it.status}"></span><span style="font-size:10px;color:var(--text-secondary)">${t(it.status)}</span></div></td><td><div class="ra"><button class="xform-btn" title="${t('rotateLeft')}" onclick="rotateImg(${idx},-90,event)">↺</button><button class="xform-btn" title="${t('rotateRight')}" onclick="rotateImg(${idx},90,event)">↻</button><button class="xform-btn" title="${t('flipH')}" onclick="flipImgH(${idx},event)">⇋</button><button class="xform-btn" title="${t('flipV')}" onclick="flipImgV(${idx},event)">⇅</button>${it.status==='error'?`<button class="rb" onclick="retryFile(${idx},event)">🔄</button>`:''}${it.status==='done'?`<button class="rb" onclick="openPrev(${idx})">👁️</button>`:''}<button class="rb dng" onclick="remFile(${idx},event)">✕</button></div></td>`;
+tr.innerHTML=`<td class="cbc"><input type="checkbox" ${it.selected?'checked':''} onchange="toggleSel(${idx})"></td><td class="drag-handle" title="Drag">≡</td><td><div class="fic"><img class="fthumb" style="${thumbStyle}" src="${it.thumbUrl}" loading="lazy"><div style="min-width:0">${dupTag}${fbTag}${cropTag}${xformTag}${nameCell}${nc?`<div class="fnew">→ ${esc(fn)}</div>`:''}</div></div></td><td><div class="fsub">${it.path?`<span class="folder-path">📂 ${esc(it.path)}</span>`:'—'}</div></td><td><span class="so">${fmtSize(it.originalSize)}</span></td><td><span class="sopt">${it.optimizedSize!==null?fmtSize(it.optimizedSize):'—'}</span></td><td>${sp!==null?`<span class="bdg ${sc}">-${sp}%</span>`:'—'}</td><td><div class="sc"><span class="dot ${it.status}"></span><span style="font-size:10px;color:var(--text-secondary)">${t(it.status)}</span></div></td><td><div class="ra"><button class="xform-btn" title="${t('rotateLeft')}" onclick="rotateImg(${idx},-90,event)">↺</button><button class="xform-btn" title="${t('rotateRight')}" onclick="rotateImg(${idx},90,event)">↻</button><button class="xform-btn" title="${t('flipH')}" onclick="flipImgH(${idx},event)">⇋</button><button class="xform-btn" title="${t('flipV')}" onclick="flipImgV(${idx},event)">⇅</button>${it.status==='error'?`<button class="rb" onclick="retryFile(${idx},event)">🔄</button>`:''}${it.status==='done'?`<button class="rb" onclick="openPrev(${idx})">👁️</button>`:''}<button class="rb dng" onclick="remFile(${idx},event)">✕</button></div></td>`;
 tb.appendChild(tr);});
 if(!shown&&q)tb.innerHTML=`<tr><td colspan="9"><div class="empty"><div class="ei">🔎</div><p>${t('noResults')}</p></div></td></tr>`;}
 
-function remFile(i,e){if(e)e.stopPropagation();if(isProcessing)return;if(files[i].thumbUrl)URL.revokeObjectURL(files[i].thumbUrl);files.splice(i,1);if(!files.length){document.getElementById('savBanner').classList.remove('vis');document.getElementById('folderInfo').classList.remove('vis');}else{if(hasOpt)updSav();updateFolderInfo();}document.getElementById('btnDl').disabled=!files.some(f=>f.status==='done');markDuplicates();updateUI();updRnPrev();if(!files.length)clearSession();else saveSession();}
-async function retryFile(idx,e){if(e)e.stopPropagation();if(isProcessing)return;files[idx].status='processing';updateUI();try{const blob=await optimizeImage(files[idx]);files[idx].optimizedBlob=blob;files[idx].optimizedSize=blob.size;files[idx].status='done';showToast(t('retried'),'success');}catch(err){files[idx].status='error';showToast(t('retryError'),'error');}updateUI();if(hasOpt)updSav();}
+function remFile(i,e){if(e)e.stopPropagation();if(isProcessing)return;if(files[i].thumbUrl)URL.revokeObjectURL(files[i].thumbUrl);files.splice(i,1);if(!files.length){document.getElementById('savBanner').classList.remove('vis');document.getElementById('folderInfo').classList.remove('vis');}else{if(hasOpt)updSav();updateFolderInfo();}refreshDownloadButtons();markDuplicates();updateUI();updRnPrev();if(!files.length)clearSession();else saveSession();}
+async function retryFile(idx,e){if(e)e.stopPropagation();if(isProcessing)return;files[idx].status='processing';updateUI();try{const{blob,mime}=await processOneFile(files[idx]);files[idx].optimizedBlob=blob;files[idx].optimizedSize=blob.size;files[idx].actualMime=mime;files[idx].formatFallback=(mime!==mimeChainFor(currentFormat)[0]);files[idx].status='done';showToast(t('retried'),'success');}catch(err){files[idx].status='error';showToast(t('retryError'),'error');}refreshDownloadButtons();updateUI();if(hasOpt)updSav();saveSession();}
 
-// OPTIMIZATION
-async function startOptimization(){if(isProcessing)return;const sel=files.filter(f=>f.selected);if(!sel.length)return showToast(t('noFileSelected'),'error');isProcessing=true;const btn=document.getElementById('btnOpt');btn.disabled=true;btn.innerHTML='⏳ '+t('optimizing');document.getElementById('btnDl').disabled=true;const ps=document.getElementById('progSec');ps.classList.add('vis');document.getElementById('progBar').style.width='0%';let done=0;const total=sel.length,t0=Date.now();const indices=files.map((f,i)=>f.selected?i:-1).filter(i=>i>=0);
-lastOptSnapshot=indices.map(idx=>({ref:files[idx],prevStatus:files[idx].status,prevBlob:files[idx].optimizedBlob,prevSize:files[idx].optimizedSize}));
-for(let b=0;b<indices.length;b+=3){const batch=indices.slice(b,b+3);await Promise.all(batch.map(async idx=>{files[idx].status='processing';try{const blob=await optimizeImage(files[idx]);files[idx].optimizedBlob=blob;files[idx].optimizedSize=blob.size;files[idx].status='done';}catch(err){console.error(err);files[idx].status='error';files[idx].optimizedSize=files[idx].originalSize;}done++;const pct=Math.round(done/total*100);document.getElementById('progBar').style.width=pct+'%';document.getElementById('progText').textContent=`${done}/${total} (${pct}%)`;const elapsed=(Date.now()-t0)/1000,rate=done/elapsed,rem=Math.ceil((total-done)/rate);document.getElementById('progEta').textContent=rem>0?`~${rem}s ${t('remaining')}`:'';}));updateUI();}
-hasOpt=true;updSav();btn.disabled=false;btn.innerHTML='⚡ '+t('optimizeAll');document.getElementById('btnDl').disabled=!files.some(f=>f.status==='done');isProcessing=false;setTimeout(()=>{ps.classList.remove('vis');document.getElementById('progEta').textContent='';},1500);showToast(`${done} ${t('processed')}`,'success');document.getElementById('btnUndo').style.display='inline-flex';saveSession();}
+// ===== FORMAT FALLBACK CHAIN =====
+// Ensures AVIF/WebP always degrade gracefully to a format the browser can actually encode,
+// and verifies the blob.type really matches what we asked for (some browsers silently
+// substitute PNG without erroring).
+function mimeChainFor(fmt){if(fmt==='avif')return['image/avif','image/webp','image/jpeg'];if(fmt==='webp')return['image/webp','image/jpeg'];if(fmt==='jpeg')return['image/jpeg'];return['image/png'];}
+function extFromMime(m){return{'image/webp':'.webp','image/jpeg':'.jpg','image/avif':'.avif','image/png':'.png'}[m]||'.jpg';}
+function encodeWithFallbackMain(canvas,chain,quality){return new Promise(resolve=>{let i=0;function tryNext(){if(i>=chain.length){canvas.toBlob(b=>resolve({blob:b,mime:'image/png'}),'image/png');return;}const mime=chain[i++];canvas.toBlob(b=>{if(b&&b.size>0&&b.type===mime)resolve({blob:b,mime});else tryNext();},mime,mime==='image/png'?undefined:quality);}tryNext();});}
 
-function undoLastOptimization(){if(!lastOptSnapshot)return;lastOptSnapshot.forEach(s=>{s.ref.status=s.prevStatus;s.ref.optimizedBlob=s.prevBlob;s.ref.optimizedSize=s.prevSize;});lastOptSnapshot=null;hasOpt=files.some(f=>f.status==='done');if(hasOpt)updSav();else document.getElementById('savBanner').classList.remove('vis');document.getElementById('btnDl').disabled=!hasOpt;document.getElementById('btnUndo').style.display='none';updateUI();showToast(t('undoDone'),'info');saveSession();}
+// ===== WEB WORKER POOL =====
+// Real off-main-thread processing via OffscreenCanvas so large batches never freeze the UI.
+// Falls back to the main-thread path automatically on browsers without OffscreenCanvas
+// (e.g. older Safari) — same fallback chain, same crop/rotation/watermark logic.
+const canUseWorkers=(typeof Worker!=='undefined')&&(typeof OffscreenCanvas!=='undefined')&&!!(OffscreenCanvas.prototype&&OffscreenCanvas.prototype.convertToBlob);
+const WORKER_COUNT=Math.max(1,Math.min(navigator.hardwareConcurrency||4,6));
+let workerPool=[],workersReady=false,taskIdCounter=0,taskQueue=[];
+const WORKER_SOURCE=[
+'var wmBitmap=null;',
+'self.onmessage=async function(e){',
+' var msg=e.data;',
+' if(msg.type==="setWatermark"){',
+'   try{ wmBitmap = msg.blob ? await createImageBitmap(msg.blob) : null; }catch(err){ wmBitmap=null; }',
+'   return;',
+' }',
+' if(msg.type==="optimize"){',
+'   try{ var result=await processImage(msg); self.postMessage({id:msg.id,ok:true,blob:result.blob,mime:result.mime}); }',
+'   catch(err){ self.postMessage({id:msg.id,ok:false,error:(err&&err.message)?err.message:String(err)}); }',
+' }',
+'};',
+'async function encodeWithFallback(canvas,chain,quality){',
+' for(var i=0;i<chain.length;i++){',
+'   var mime=chain[i];',
+'   try{ var opts=(mime==="image/png")?{type:mime}:{type:mime,quality:quality}; var blob=await canvas.convertToBlob(opts); if(blob&&blob.size>0&&blob.type===mime) return {blob:blob,mime:mime}; }catch(err){}',
+' }',
+' var fb=await canvas.convertToBlob({type:"image/png"}); return {blob:fb,mime:"image/png"};',
+'}',
+'async function processImage(msg){',
+' var bitmap=await createImageBitmap(msg.file);',
+' var srcX=0,srcY=0,srcW=bitmap.width,srcH=bitmap.height;',
+' if(msg.cropData){ var cd=msg.cropData; srcX=Math.round(cd.cropX*bitmap.width); srcY=Math.round(cd.cropY*bitmap.height); srcW=Math.round(cd.cropW*bitmap.width); srcH=Math.round(cd.cropH*bitmap.height); srcX=Math.max(0,Math.min(srcX,bitmap.width-1)); srcY=Math.max(0,Math.min(srcY,bitmap.height-1)); srcW=Math.min(srcW,bitmap.width-srcX); srcH=Math.min(srcH,bitmap.height-srcY); }',
+' var w=srcW,h=srcH,canvas,ctx;',
+' if(msg.fixedOn){',
+'   var fw=msg.fixedW||1000, fh=msg.fixedH||1000, padColor=msg.padColor;',
+'   var sc=Math.min(fw/w,fh/h,1); var sw=Math.round(w*sc), sh=Math.round(h*sc);',
+'   canvas=new OffscreenCanvas(fw,fh); ctx=canvas.getContext("2d");',
+'   if(padColor!=="transparent"){ ctx.fillStyle=padColor; ctx.fillRect(0,0,fw,fh); }',
+'   ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality="high";',
+'   ctx.drawImage(bitmap,srcX,srcY,srcW,srcH,Math.round((fw-sw)/2),Math.round((fh-sh)/2),sw,sh);',
+' } else {',
+'   var maxRes=msg.maxRes;',
+'   if(w>maxRes||h>maxRes){ if(w>=h){ h=Math.round(h/w*maxRes); w=maxRes; } else { w=Math.round(w/h*maxRes); h=maxRes; } }',
+'   canvas=new OffscreenCanvas(w,h); ctx=canvas.getContext("2d");',
+'   ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality="high";',
+'   ctx.drawImage(bitmap,srcX,srcY,srcW,srcH,0,0,w,h);',
+' }',
+' bitmap.close();',
+' if(msg.rotation||msg.flipH||msg.flipV){',
+'   var rad=msg.rotation*Math.PI/180; var swapDims=(msg.rotation===90||msg.rotation===270);',
+'   var rw=swapDims?canvas.height:canvas.width, rh=swapDims?canvas.width:canvas.height;',
+'   var rCanvas=new OffscreenCanvas(rw,rh); var rCtx=rCanvas.getContext("2d");',
+'   rCtx.translate(rw/2,rh/2); rCtx.rotate(rad); rCtx.scale(msg.flipH?-1:1,msg.flipV?-1:1);',
+'   rCtx.drawImage(canvas,-canvas.width/2,-canvas.height/2);',
+'   canvas=rCanvas; ctx=rCtx;',
+' }',
+' if(msg.copyright){ ctx.save(); ctx.globalAlpha=0.7; ctx.fillStyle="#fff"; ctx.font="12px sans-serif"; ctx.textAlign="right"; ctx.textBaseline="bottom"; ctx.fillText(msg.copyright,canvas.width-8,canvas.height-8); ctx.restore(); }',
+' if(msg.wm){',
+'   if(msg.wm.mode==="image"&&wmBitmap){',
+'     var sc2=msg.wm.scale/100, op=msg.wm.opacity/100; var wW=canvas.width*sc2; var wH=(wmBitmap.height/wmBitmap.width)*wW; var m=canvas.width*0.03; var x,y;',
+'     switch(msg.wm.pos){ case "top-left": x=m; y=m; break; case "top-right": x=canvas.width-wW-m; y=m; break; case "bottom-left": x=m; y=canvas.height-wH-m; break; case "bottom-right": x=canvas.width-wW-m; y=canvas.height-wH-m; break; default: x=(canvas.width-wW)/2; y=(canvas.height-wH)/2; }',
+'     ctx.globalAlpha=op; ctx.drawImage(wmBitmap,x,y,wW,wH); ctx.globalAlpha=1;',
+'   } else if(msg.wm.mode==="text"){',
+'     var text=msg.wm.text||"Watermark", color=msg.wm.color, sizePct=msg.wm.sizePct/100, op2=msg.wm.opacity/100, rot=msg.wm.rotation;',
+'     var fontSize=Math.max(10,Math.round(canvas.width*sizePct)); var m2=canvas.width*0.04;',
+'     ctx.save(); ctx.globalAlpha=op2; ctx.fillStyle=color; ctx.font="bold "+fontSize+"px sans-serif"; ctx.textBaseline="middle";',
+'     var x2,y2,align="left";',
+'     switch(msg.wm.pos){ case "top-left": x2=m2; y2=m2+fontSize/2; break; case "top-right": x2=canvas.width-m2; y2=m2+fontSize/2; align="right"; break; case "bottom-left": x2=m2; y2=canvas.height-m2-fontSize/2; break; case "bottom-right": x2=canvas.width-m2; y2=canvas.height-m2-fontSize/2; align="right"; break; default: x2=canvas.width/2; y2=canvas.height/2; align="center"; }',
+'     ctx.textAlign=align;',
+'     if(rot){ ctx.translate(x2,y2); ctx.rotate(rot*Math.PI/180); ctx.fillText(text,0,0); } else { ctx.fillText(text,x2,y2); }',
+'     ctx.restore();',
+'   }',
+' }',
+' return await encodeWithFallback(canvas,msg.mimeChain,msg.quality);',
+'}'
+].join('\n');
+function initWorkerPool(){if(!canUseWorkers||workersReady)return;try{const blob=new Blob([WORKER_SOURCE],{type:'application/javascript'});const url=URL.createObjectURL(blob);for(let i=0;i<WORKER_COUNT;i++){const w=new Worker(url);w._busy=false;w._resolvers={};w.onmessage=e=>{const d=e.data;const res=w._resolvers[d.id];if(res){delete w._resolvers[d.id];w._busy=false;res(d);processQueue();}};w.onerror=err=>console.error('Worker error',err);if(wmImgFile)w.postMessage({type:'setWatermark',blob:wmImgFile});workerPool.push(w);}workersReady=true;}catch(err){console.error('initWorkerPool failed',err);workersReady=false;}}
+function processQueue(){if(!taskQueue.length)return;const w=workerPool.find(w=>!w._busy);if(!w)return;const task=taskQueue.shift();w._busy=true;w._resolvers[task.msg.id]=task.resolve;w.postMessage(task.msg);}
+function runInWorker(msg){return new Promise(resolve=>{const id=++taskIdCounter;taskQueue.push({msg:{...msg,id},resolve});processQueue();});}
+function broadcastWatermark(fileOrNull){workerPool.forEach(w=>w.postMessage({type:'setWatermark',blob:fileOrNull}));}
+function currentWmConfig(){if(!document.getElementById('wmEnabled').checked)return null;if(wmTab==='image'){if(!wmImg)return null;return{mode:'image',pos:document.getElementById('wmPos').value,opacity:+document.getElementById('wmOpacity').value,scale:+document.getElementById('wmScale').value};}return{mode:'text',text:document.getElementById('wmText').value||'Watermark',color:document.getElementById('wmColor').value,pos:document.getElementById('wmTextPos').value,sizePct:+document.getElementById('wmTextSize').value,opacity:+document.getElementById('wmTextOpacity').value,rotation:+document.getElementById('wmTextRot').value};}
 
-function optimizeImage(item){
-    return new Promise((resolve,reject)=>{
-        const img=new Image();
-        const url=URL.createObjectURL(item.file);
-        img.onload=()=>{
-            URL.revokeObjectURL(url);
-            const quality=+document.getElementById('qSlider').value/100;
-            const maxRes=+document.getElementById('rSlider').value;
-            const fixedOn=document.getElementById('fixedEnabled').checked;
+function refreshDownloadButtons(){const has=files.some(f=>f.status==='done');document.getElementById('btnDl').disabled=!has;const bsf=document.getElementById('btnSaveFolder');if(bsf)bsf.disabled=!has;}
 
-            // Step 1: Determine source region (crop or full)
-            let srcX=0,srcY=0,srcW=img.width,srcH=img.height;
-            if(item.cropData){
-                const cd=item.cropData;
-                const sx=img.width/cd.canvasW, sy=img.height/cd.canvasH;
-                srcX=Math.round(cd.cropX*sx);srcY=Math.round(cd.cropY*sy);
-                srcW=Math.round(cd.cropW*sx);srcH=Math.round(cd.cropH*sy);
-                srcX=Math.max(0,Math.min(srcX,img.width-1));
-                srcY=Math.max(0,Math.min(srcY,img.height-1));
-                srcW=Math.min(srcW,img.width-srcX);
-                srcH=Math.min(srcH,img.height-srcY);
-            }
+// ===== OPTIMIZATION =====
+async function startOptimization(){if(isProcessing)return;const sel=files.filter(f=>f.selected);if(!sel.length)return showToast(t('noFileSelected'),'error');isProcessing=true;const btn=document.getElementById('btnOpt');btn.disabled=true;btn.innerHTML='⏳ '+t('optimizing');refreshDownloadButtons();document.getElementById('btnDl').disabled=true;const bsf0=document.getElementById('btnSaveFolder');if(bsf0)bsf0.disabled=true;const ps=document.getElementById('progSec');ps.classList.add('vis');document.getElementById('progBar').style.width='0%';let done=0;const total=sel.length,t0=Date.now();const indices=files.map((f,i)=>f.selected?i:-1).filter(i=>i>=0);
+lastOptSnapshot=indices.map(idx=>({ref:files[idx],prevStatus:files[idx].status,prevBlob:files[idx].optimizedBlob,prevSize:files[idx].optimizedSize,prevMime:files[idx].actualMime,prevFallback:files[idx].formatFallback}));
+if(canUseWorkers)initWorkerPool();
+const concurrency=canUseWorkers&&workerPool.length?workerPool.length:3;
+let cursor=0;
+async function worker(){while(cursor<indices.length){const idx=indices[cursor++];files[idx].status='processing';updateUI();try{const{blob,mime}=await processOneFile(files[idx]);files[idx].optimizedBlob=blob;files[idx].optimizedSize=blob.size;files[idx].actualMime=mime;files[idx].formatFallback=(mime!==mimeChainFor(currentFormat)[0]);files[idx].status='done';}catch(err){console.error(err);files[idx].status='error';files[idx].optimizedSize=files[idx].originalSize;}done++;const pct=Math.round(done/total*100);document.getElementById('progBar').style.width=pct+'%';document.getElementById('progText').textContent=`${done}/${total} (${pct}%)`;const elapsed=(Date.now()-t0)/1000,rate=done/elapsed,rem=Math.ceil((total-done)/rate);document.getElementById('progEta').textContent=rem>0?`~${rem}s ${t('remaining')}`:'';updateUI();}}
+await Promise.all(Array.from({length:Math.min(concurrency,indices.length)},worker));
+hasOpt=true;updSav();btn.disabled=false;btn.innerHTML='⚡ '+t('optimizeAll');refreshDownloadButtons();isProcessing=false;setTimeout(()=>{ps.classList.remove('vis');document.getElementById('progEta').textContent='';},1500);showToast(`${done} ${t('processed')}`,'success');document.getElementById('btnUndo').style.display='inline-flex';saveSession();}
 
-            let w=srcW,h=srcH,canvas,ctx;
+function undoLastOptimization(){if(!lastOptSnapshot)return;lastOptSnapshot.forEach(s=>{s.ref.status=s.prevStatus;s.ref.optimizedBlob=s.prevBlob;s.ref.optimizedSize=s.prevSize;s.ref.actualMime=s.prevMime;s.ref.formatFallback=s.prevFallback;});lastOptSnapshot=null;hasOpt=files.some(f=>f.status==='done');if(hasOpt)updSav();else document.getElementById('savBanner').classList.remove('vis');refreshDownloadButtons();document.getElementById('btnUndo').style.display='none';updateUI();showToast(t('undoDone'),'info');saveSession();}
 
-            // Step 2: Apply sizing
-            if(fixedOn){
-                const fw=+document.getElementById('fixedW').value||1000;
-                const fh=+document.getElementById('fixedH').value||1000;
-                const padSel=document.getElementById('fixedPad').value;
-                const padColor=padSel==='custom'?document.getElementById('fixedColor').value:padSel;
-                const sc=Math.min(fw/w,fh/h,1);
-                const sw=Math.round(w*sc),sh=Math.round(h*sc);
-                canvas=document.createElement('canvas');canvas.width=fw;canvas.height=fh;
-                ctx=canvas.getContext('2d');
-                if(padColor!=='transparent'){ctx.fillStyle=padColor;ctx.fillRect(0,0,fw,fh);}
-                ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
-                ctx.drawImage(img,srcX,srcY,srcW,srcH,Math.round((fw-sw)/2),Math.round((fh-sh)/2),sw,sh);
-            }else{
-                if(w>maxRes||h>maxRes){if(w>=h){h=Math.round(h/w*maxRes);w=maxRes;}else{w=Math.round(w/h*maxRes);h=maxRes;}}
-                canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-                ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
-                ctx.drawImage(img,srcX,srcY,srcW,srcH,0,0,w,h);
-            }
+// Dispatches to the worker pool when available, else to the main-thread path below.
+// Both paths share the exact same crop/resize/rotate/watermark/format-fallback semantics.
+async function processOneFile(item){
+    const quality=+document.getElementById('qSlider').value/100;
+    const maxRes=+document.getElementById('rSlider').value;
+    const fixedOn=document.getElementById('fixedEnabled').checked;
+    const fixedW=+document.getElementById('fixedW').value||1000;
+    const fixedH=+document.getElementById('fixedH').value||1000;
+    const padSel=document.getElementById('fixedPad').value;
+    const padColor=padSel==='custom'?document.getElementById('fixedColor').value:padSel;
+    const copyright=document.getElementById('copyrightText').value.trim();
+    const mimeChain=mimeChainFor(currentFormat);
+    const cfg={cropData:item.cropData,rotation:item.rotation,flipH:item.flipH,flipV:item.flipV,fixedOn,fixedW,fixedH,padColor,maxRes,copyright,mimeChain,quality};
+    if(canUseWorkers){
+        const wm=currentWmConfig();
+        const res=await runInWorker({type:'optimize',file:item.file,wm,...cfg});
+        if(!res.ok)throw new Error(res.error||'worker failed');
+        return{blob:res.blob,mime:res.mime};
+    }
+    return await optimizeImageMainThread(item,cfg);
+}
 
-            // Step 2b: Rotation / flip
-            if(item.rotation||item.flipH||item.flipV){
-                const rad=item.rotation*Math.PI/180;
-                const swapDims=(item.rotation===90||item.rotation===270);
-                const rw=swapDims?canvas.height:canvas.width, rh=swapDims?canvas.width:canvas.height;
-                const rCanvas=document.createElement('canvas');rCanvas.width=rw;rCanvas.height=rh;
-                const rCtx=rCanvas.getContext('2d');
-                rCtx.translate(rw/2,rh/2);
-                rCtx.rotate(rad);
-                rCtx.scale(item.flipH?-1:1,item.flipV?-1:1);
-                rCtx.drawImage(canvas,-canvas.width/2,-canvas.height/2);
-                canvas=rCanvas;ctx=rCtx;
-            }
-
-            // Step 3: Copyright
-            const copyright=document.getElementById('copyrightText').value.trim();
-            if(copyright){ctx.save();ctx.globalAlpha=0.7;ctx.fillStyle='#fff';ctx.font='12px Inter,sans-serif';ctx.textAlign='right';ctx.textBaseline='bottom';ctx.fillText(copyright,canvas.width-8,canvas.height-8);ctx.restore();}
-
-            // Step 4: Watermark
-            if(document.getElementById('wmEnabled').checked)applyWm(ctx,canvas.width,canvas.height);
-
-            // Step 5: Export
-            const mime=getMime();
-            canvas.toBlob(blob=>{
-                if(blob&&blob.size>0)resolve(blob);
-                else canvas.toBlob(fb=>fb?resolve(fb):reject(new Error('toBlob failed')),'image/jpeg',quality);
-            },mime,quality);
-        };
-        img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Load fail'));};
-        img.src=url;
-    });
+// Main-thread fallback (used when OffscreenCanvas/Worker aren't available, e.g. older Safari).
+// Uses createImageBitmap + explicit .close() so decoded pixel buffers are released immediately
+// instead of waiting on GC, and never holds more than one image's worth of canvases at a time.
+async function optimizeImageMainThread(item,cfg){
+    const bitmap=await createImageBitmap(item.file);
+    let srcX=0,srcY=0,srcW=bitmap.width,srcH=bitmap.height;
+    if(cfg.cropData){
+        const cd=cfg.cropData;
+        srcX=Math.round(cd.cropX*bitmap.width);srcY=Math.round(cd.cropY*bitmap.height);
+        srcW=Math.round(cd.cropW*bitmap.width);srcH=Math.round(cd.cropH*bitmap.height);
+        srcX=Math.max(0,Math.min(srcX,bitmap.width-1));
+        srcY=Math.max(0,Math.min(srcY,bitmap.height-1));
+        srcW=Math.min(srcW,bitmap.width-srcX);
+        srcH=Math.min(srcH,bitmap.height-srcY);
+    }
+    let w=srcW,h=srcH,canvas,ctx;
+    if(cfg.fixedOn){
+        const sc=Math.min(cfg.fixedW/w,cfg.fixedH/h,1);
+        const sw=Math.round(w*sc),sh=Math.round(h*sc);
+        canvas=document.createElement('canvas');canvas.width=cfg.fixedW;canvas.height=cfg.fixedH;
+        ctx=canvas.getContext('2d');
+        if(cfg.padColor!=='transparent'){ctx.fillStyle=cfg.padColor;ctx.fillRect(0,0,cfg.fixedW,cfg.fixedH);}
+        ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+        ctx.drawImage(bitmap,srcX,srcY,srcW,srcH,Math.round((cfg.fixedW-sw)/2),Math.round((cfg.fixedH-sh)/2),sw,sh);
+    }else{
+        if(w>cfg.maxRes||h>cfg.maxRes){if(w>=h){h=Math.round(h/w*cfg.maxRes);w=cfg.maxRes;}else{w=Math.round(w/h*cfg.maxRes);h=cfg.maxRes;}}
+        canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+        ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+        ctx.drawImage(bitmap,srcX,srcY,srcW,srcH,0,0,w,h);
+    }
+    bitmap.close();
+    if(item.rotation||item.flipH||item.flipV){
+        const rad=item.rotation*Math.PI/180;
+        const swapDims=(item.rotation===90||item.rotation===270);
+        const rw=swapDims?canvas.height:canvas.width, rh=swapDims?canvas.width:canvas.height;
+        const rCanvas=document.createElement('canvas');rCanvas.width=rw;rCanvas.height=rh;
+        const rCtx=rCanvas.getContext('2d');
+        rCtx.translate(rw/2,rh/2);rCtx.rotate(rad);rCtx.scale(item.flipH?-1:1,item.flipV?-1:1);
+        rCtx.drawImage(canvas,-canvas.width/2,-canvas.height/2);
+        canvas=rCanvas;ctx=rCtx;
+    }
+    if(cfg.copyright){ctx.save();ctx.globalAlpha=0.7;ctx.fillStyle='#fff';ctx.font='12px Inter,sans-serif';ctx.textAlign='right';ctx.textBaseline='bottom';ctx.fillText(cfg.copyright,canvas.width-8,canvas.height-8);ctx.restore();}
+    if(document.getElementById('wmEnabled').checked)applyWm(ctx,canvas.width,canvas.height);
+    return await encodeWithFallbackMain(canvas,cfg.mimeChain,cfg.quality);
 }
 
 // SAVINGS
@@ -593,10 +681,42 @@ function updSav(){const sel=files.filter(f=>f.selected),to=sel.reduce((s,f)=>s+f
 // ZIP
 async function downloadZip(){const done=files.filter(f=>f.status==='done'&&f.selected);if(!done.length)return showToast(t('noFiles'),'error');const btn=document.getElementById('btnDl');btn.disabled=true;btn.innerHTML='⏳ '+t('creatingZip');try{const zip=new JSZip(),root=zip.folder('optimized_images'),nc={};let ri=0;files.forEach(f=>{if(f.status!=='done'||!f.selected)return;let name=buildName(f,ri);ri++;const fk=(keepFL()&&f.path?f.path+'/':'')+name;if(nc[fk]){nc[fk]++;const p=name.split('.'),e=p.pop();name=p.join('.')+`-${nc[fk]}.${e}`;}else nc[fk]=1;if(keepFL()&&f.path){const fp=isSeoOn()?f.path.split('/').map(slugify).join('/'):f.path;root.folder(fp).file(name,f.optimizedBlob);}else root.file(name,f.optimizedBlob);});const content=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:1}});saveAs(content,`optimized_${new Date().toISOString().slice(0,10)}.zip`);showToast(t('zipDownloaded'),'success');}catch(err){console.error(err);showToast(t('zipError'),'error');}btn.disabled=false;btn.innerHTML='📦 '+t('downloadZip');}
 
+// SAVE TO FOLDER (File System Access API — Chrome/Edge only, graceful fallback to ZIP elsewhere)
+const hasFSAccess=typeof window.showDirectoryPicker==='function';
+async function saveToFolder(){
+    const done=files.filter(f=>f.status==='done'&&f.selected);
+    if(!done.length)return showToast(t('noFiles'),'error');
+    if(!hasFSAccess){showToast(t('fsaUnsupported'),'info');return downloadZip();}
+    const btn=document.getElementById('btnSaveFolder');
+    try{
+        const rootHandle=await window.showDirectoryPicker();
+        btn.disabled=true;btn.innerHTML='⏳ '+t('creatingZip');
+        const nc={};let ri=0;
+        for(const f of files){
+            if(f.status!=='done'||!f.selected)continue;
+            let name=buildName(f,ri);ri++;
+            const fk=(keepFL()&&f.path?f.path+'/':'')+name;
+            if(nc[fk]){nc[fk]++;const p=name.split('.'),e=p.pop();name=p.join('.')+`-${nc[fk]}.${e}`;}else nc[fk]=1;
+            let dirHandle=rootHandle;
+            if(keepFL()&&f.path){const parts=(isSeoOn()?f.path.split('/').map(slugify):f.path.split('/'));for(const part of parts){if(!part)continue;dirHandle=await dirHandle.getDirectoryHandle(part,{create:true});}}
+            const fileHandle=await dirHandle.getFileHandle(name,{create:true});
+            const writable=await fileHandle.createWritable();
+            await writable.write(f.optimizedBlob);
+            await writable.close();
+        }
+        showToast(t('fsaSaved'),'success');
+    }catch(err){
+        if(err&&err.name==='AbortError'){/* user cancelled the picker, no error toast */}
+        else{console.error(err);showToast(t('fsaError'),'error');}
+    }
+    btn.disabled=!files.some(f=>f.status==='done');btn.innerHTML='💾 '+t('saveFolder');
+}
+
 // PREVIEW
-function openPrev(i){const it=files[i];if(it.status!=='done')return;document.getElementById('prevTitle').textContent=it.file.name;document.getElementById('prevOrig').src=it.thumbUrl;document.getElementById('prevOS').textContent=fmtSize(it.originalSize);document.getElementById('prevOpt').src=URL.createObjectURL(it.optimizedBlob);document.getElementById('prevPS').textContent=fmtSize(it.optimizedSize);document.getElementById('prevModal').classList.add('vis');}
-function closePrev(){document.getElementById('prevModal').classList.remove('vis');}
-function clearAll(){files.forEach(f=>{if(f.thumbUrl)URL.revokeObjectURL(f.thumbUrl);});files=[];isProcessing=false;hasOpt=false;lastOptSnapshot=null;document.getElementById('savBanner').classList.remove('vis');document.getElementById('progSec').classList.remove('vis');document.getElementById('btnDl').disabled=true;document.getElementById('btnUndo').style.display='none';document.getElementById('btnDupes').style.display='none';document.getElementById('folderInfo').classList.remove('vis');updateUI();updRnPrev();showToast(t('allCleared'),'info');clearSession();}
+let currentPrevUrl=null;
+function openPrev(i){const it=files[i];if(it.status!=='done')return;if(currentPrevUrl){URL.revokeObjectURL(currentPrevUrl);currentPrevUrl=null;}document.getElementById('prevTitle').textContent=it.file.name;document.getElementById('prevOrig').src=it.thumbUrl;document.getElementById('prevOS').textContent=fmtSize(it.originalSize);currentPrevUrl=URL.createObjectURL(it.optimizedBlob);document.getElementById('prevOpt').src=currentPrevUrl;document.getElementById('prevPS').textContent=fmtSize(it.optimizedSize);document.getElementById('prevModal').classList.add('vis');}
+function closePrev(){document.getElementById('prevModal').classList.remove('vis');if(currentPrevUrl){URL.revokeObjectURL(currentPrevUrl);currentPrevUrl=null;}}
+function clearAll(){files.forEach(f=>{if(f.thumbUrl)URL.revokeObjectURL(f.thumbUrl);});files=[];isProcessing=false;hasOpt=false;lastOptSnapshot=null;document.getElementById('savBanner').classList.remove('vis');document.getElementById('progSec').classList.remove('vis');refreshDownloadButtons();document.getElementById('btnUndo').style.display='none';document.getElementById('btnDupes').style.display='none';document.getElementById('folderInfo').classList.remove('vis');updateUI();updRnPrev();showToast(t('allCleared'),'info');clearSession();}
 
 // SESSION PERSISTENCE (IndexedDB) — survives page reloads, stored only in this browser
 const DB_NAME='imgOptimizerProDB',DB_STORE='session';
