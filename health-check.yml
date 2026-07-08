@@ -1,0 +1,25 @@
+name: Weekly Health Check
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Every Monday at 09:00 UTC
+  workflow_dispatch:       # Manual trigger
+
+jobs:
+  check-live:
+    name: 🏥 Weekly URL Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check live URL is reachable
+        run: |
+          URL="https://gdr-sys.github.io/Image-Optimizer-Pro/"
+          echo "🌐 Checking ${URL}..."
+          STATUS=$(curl -o /dev/null -s -w "%{http_code}" -L "${URL}")
+          echo "HTTP status: ${STATUS}"
+          if [ "${STATUS}" -eq 200 ]; then
+            echo "✅ Site is live and healthy"
+          else
+            echo "❌ Site returned HTTP ${STATUS}"
+            exit 1
+          fi

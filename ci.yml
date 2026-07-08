@@ -1,0 +1,126 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  # ── Validate ────────────────────────────────────────────────────
+  validate:
+    name: 🔍 Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate HTML structure
+        run: |
+          echo "🔎 Checking index.html exists..."
+          test -f index.html || { echo "❌ index.html not found"; exit 1; }
+          echo "✅ index.html found"
+
+          echo "🔎 Checking HTML structure..."
+          grep -q '<!DOCTYPE html\|<!doctype html' index.html || { echo "❌ Missing DOCTYPE"; exit 1; }
+          grep -q '<html' index.html || { echo "❌ Missing <html> tag"; exit 1; }
+          grep -q '</html>' index.html || { echo "❌ Missing </html> tag"; exit 1; }
+          echo "✅ HTML structure valid"
+
+      - name: Check file size
+        run: |
+          SIZE=$(stat -c%s index.html 2>/dev/null || stat -f%z index.html)
+          SIZE_KB=$((SIZE / 1024))
+          echo "📦 index.html size: ${SIZE_KB} KB (${SIZE} bytes)"
+
+          if [ "$SIZE" -gt 1000000 ]; then
+            echo "❌ File exceeds 1MB — something is wrong"
+            exit 1
+          elif [ "$SIZE" -gt 500000 ]; then
+            echo "⚠️  Warning: file exceeds 500KB — consider optimizing"
+          else
+            echo "✅ File size OK"
+          fi
+
+      - name: Verify critical features in source
+        run: |
+          echo "🔎 Checking for Web Worker support..."
+          grep -q 'Worker' index.html && echo "✅ Web Worker code found" || echo "⚠️  No Worker reference found"
+
+          echo "🔎 Checking for Service Worker / PWA..."
+          grep -q 'serviceWorker\|service-worker' index.html && echo "✅ Service Worker code found" || echo "⚠️  No Service Worker reference found"
+
+          echo "🔎 Checking for IndexedDB (session persistence)..."
+          grep -q 'indexedDB\|IndexedDB' index.html && echo "✅ IndexedDB code found" || echo "⚠️  No IndexedDB reference found"
+
+          echo "🔎 Checking for JSZip (export)..."
+          grep -q 'JSZip\|jszip' index.html && echo "✅ JSZip code found" || echo "⚠️  No JSZip reference found"
+
+          echo "🔎 Checking for i18n..."
+          grep -q 'lang\|i18n\|locale' index.html && echo "✅ i18n code found" || echo "⚠️  No i18n reference found"
+
+      - name: Verify screenshots exist
+        run: |
+          echo "🔎 Checking screenshots directory..."
+          if [ -d "screenshots" ]; then
+            COUNT=$(find screenshots -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.webp" \) | wc -l)
+            echo "✅ Found ${COUNT} screenshot(s)"
+          else
+            echo "⚠️  No screenshots directory found"
+          fi
+
+  # ── Deploy to GitHub Pages ──────────────────────────────────────
+  deploy:
+    name: 🚀 Deploy
+    needs: validate
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # ── Post-deploy health check ────────────────────────────────────
+  health-check:
+    name: 🏥 Health Check
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Wait for deployment propagation
+        run: sleep 30
+
+      - name: Check live URL
+        run: |
+          URL="https://gdr-sys.github.io/Image-Optimizer-Pro/"
+          echo "🌐 Checking ${URL}..."
+          STATUS=$(curl -o /dev/null -s -w "%{http_code}" "${URL}")
+          echo "HTTP status: ${STATUS}"
+          if [ "${STATUS}" -eq 200 ]; then
+            echo "✅ Live URL is reachable"
+          else
+            echo "❌ Live URL returned ${STATUS}"
+            exit 1
+          fi
