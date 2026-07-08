@@ -15,6 +15,17 @@
 ![Web Workers](https://img.shields.io/badge/processing-Web%20Workers-yellowgreen)
 ![i18n](https://img.shields.io/badge/languages-IT%20%7C%20EN-informational)
 
+---
+
+## 🔗 Links
+
+| | |
+|---|---|
+| 🌐 **Live Demo** | [gdr-sys.github.io/Image-Optimizer-Pro](https://gdr-sys.github.io/Image-Optimizer-Pro/) |
+| 📦 **Repository** | [github.com/gdr-sys/Image-Optimizer-Pro](https://github.com/gdr-sys/Image-Optimizer-Pro) |
+
+---
+
 ![Screenshot: main dashboard view with a batch of images loaded, thumbnails, savings banner and the action bar visible](./screenshots/01-hero.png)
 
 ---
@@ -28,6 +39,18 @@ I frequently needed to resize and compress images for various projects, but I al
 - **Squoosh** by Google is great but doesn't handle batch processing
 
 So I built my own. Once I got the basic compression working, I got carried away and kept adding features I wished existed — including, eventually, real background processing so it doesn't choke on a few hundred images.
+
+---
+
+## 🎯 Who it's for
+
+- **Web developers** optimizing assets before deployment
+- **E-commerce sellers** preparing product images for marketplaces (Amazon, eBay, Etsy)
+- **Content creators & bloggers** compressing images for faster page loads
+- **Photographers** batch-processing client deliverables
+- **Privacy-conscious users** who refuse to upload images to third-party servers
+- **Anyone offline** — works without internet after first load
+
 
 ---
 
@@ -187,7 +210,30 @@ git clone https://github.com/yourusername/image-optimizer-pro.git
 cd image-optimizer-pro
 # open index.html in your browser
 ```
+---
 
+---
+
+## 🔄 CI/CD
+
+This project uses **GitHub Actions** for automated checks on every push and pull request.
+
+---
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Core | Vanilla JavaScript (ES2022+) |
+| UI | HTML5 + CSS3 (no frameworks) |
+| Image Processing | Canvas API, OffscreenCanvas, Web Workers |
+| Persistence | IndexedDB, localStorage |
+| Export | JSZip (embedded), File System Access API |
+| Offline | Service Worker, Cache API |
+| Hosting | GitHub Pages |
+
+**Zero external dependencies at runtime** — everything is bundled into a single `index.html` file (~150 KB).
+
+---
 ### Browser support notes
 
 | Feature | Chrome/Edge | Firefox | Safari |
